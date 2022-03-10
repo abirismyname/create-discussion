@@ -1,0 +1,30 @@
+name: Create Discussion
+description: GitHub Action to create a new GitHub Discussion
+inputs:
+  title:
+    description: |
+      The title of the new discussion.
+    required: true
+  body:
+    description: |
+      The body of the new discussion.
+    required: true
+  repository-id:
+    description: |
+      The ID of a repository in which to create the discussion.
+    required: true
+  category-id:
+    description: |
+      The ID of a `DiscussionCategory` within this repository.
+    required: true
+outputs:
+  discussion-id:
+    description: ID of the created discussion
+  discussion-url:
+    description: URL of the created discussion   
+runs:
+  using: node12
+  main: dist/index.js
+branding:
+  icon: message-circle
+  color: purple
