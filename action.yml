@@ -1,4 +1,4 @@
-name: Create Discussion
+name: Create GitHub Discussion
 description: GitHub Action to create a new GitHub Discussion
 inputs:
   title:
