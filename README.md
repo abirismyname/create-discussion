@@ -14,6 +14,7 @@ In your workflow, to create a new discussion, include a step like this:
 
 ```yaml
     - name: Create a new GitHub Discussion
+      id: create-discussion
       uses: abirismyname/create-discussion@v1.x
       env:
         GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}      
