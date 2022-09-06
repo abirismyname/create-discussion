@@ -39,6 +39,25 @@ The following inputs are _required_:
 - `repository-id`: The ID of the repository for the new discussion
 - `category-id`: The ID of the category for the new discussion
 
+### Obtaining the `repository-id` and `category-id`
+You can find `repository-id` and `category-id` using [GitHub's GraphQL Explorer](https://docs.github.com/en/graphql/overview/explorer). Replace `<REPO_NAME>` and `<REPO_OWNER>` with the repo you want to update.
+```
+query MyQuery {
+  repository(name: "<REPO_NAME>", owner: "<REPO_OWNER>") {
+    id
+    discussionCategories(first: 10) {
+      edges {
+        node {
+          id
+          name
+        }
+        cursor
+      }
+    }
+  }
+}
+```
+
 ## Outputs
 
 This action provides the following outputs:
