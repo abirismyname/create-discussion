@@ -41,7 +41,7 @@ The following inputs are _required_:
 
 ### Obtaining the `repository-id` and `category-id`
 You can find `repository-id` and `category-id` using [GitHub's GraphQL Explorer](https://docs.github.com/en/graphql/overview/explorer). Replace `<REPO_NAME>` and `<REPO_OWNER>` with the repo you want to update.
-```
+```graphql
 query MyQuery {
   repository(name: "<REPO_NAME>", owner: "<REPO_OWNER>") {
     id
