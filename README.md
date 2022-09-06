@@ -65,6 +65,10 @@ This action provides the following outputs:
 - `discussion-id`: ID of created discussion
 - `discussion-url`: URL of created discussion
 
+## Example
+
+This repo contains an example [workflow](https://github.com/abirismyname/create-discussion/blob/main/.github/workflows/example.yml) that contains this action.
+
 ## Credits
 
 - :bow: Based on [swinton/commit](https://github.com/swinton/commit).
