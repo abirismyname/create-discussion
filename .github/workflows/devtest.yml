@@ -1,0 +1,27 @@
+name: Testing Action
+
+# Controls when the workflow will run
+on:
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+jobs:
+  generate:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Set Date
+        run: echo "DATE=$(date "+%m/%d/%Y")" >> $GITHUB_ENV
+
+      - name: Generate new discussion
+        id: create-discussion
+        uses: abirismyname/create-discussion@dev
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}      
+        with:
+          title: "Dev - New Discussion ${{ env.DATE }} in General"
+          body: |
+            Dev - Let's Discuss!
+          repository-id: 'R_kgDOG-yfvw'
+          category-id: 'DIC_kwDOG-yfv84CRQpR' 
