@@ -1,4 +1,4 @@
-name: Scorecards supply-chain security
+name: OSSF Scorecards
 on: 
   # Only the default branch is supported.
   branch_protection_rule:
@@ -6,6 +6,7 @@ on:
     - cron: '19 9 * * 2'
   push:
     branches: [ main ]
+  workflow_dispatch:  
 
 # Declare default permissions as read only.
 permissions: read-all
