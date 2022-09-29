@@ -1,4 +1,4 @@
-name: tests
+name: CI
 on:
   push:
     branches:
@@ -23,11 +23,12 @@ jobs:
       - run: npm ci
       - run: npm run lint
       - run: npm run test
+      - run: npx jest --coverage
       - name: Analyze Test and/or Coverage Results
         uses: runforesight/foresight-test-kit-action@v1
         if: success() || failure()
         with:
           api_key: ${{ secrets.FORESIGHT_KEY }}
-          test_format: JUNIT
           test_framework: JEST
-          coverage_format: JACOCO/XML
+          test_path: __tests__
+          coverage_path: coverage
