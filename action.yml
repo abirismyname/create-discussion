@@ -27,7 +27,7 @@ outputs:
   discussion-url:
     description: URL of the created discussion   
 runs:
-  using: node12
+  using: node16
   main: dist/index.js
 branding:
   icon: message-circle
