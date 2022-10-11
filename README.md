@@ -36,9 +36,11 @@ The following inputs are _required_:
 
 - `title`: The title of the discussion
 - `body`: The body of the discussion
-- `body-filepath`: The path to a file containing the body of the new discussion (takes precedence over `body`).
+- `body-filepath`: The path to a file containing the body of the new discussion (takes precedence over `body`).**
 - `repository-id`: The ID of the repository for the new discussion
-- `category-id`: The ID of the category for the new discussion
+- `category-id`: The ID of the category for the new discussion. 
+
+** If you are using `body-filepath` be sure to add a `actions/checkout` action before this action in the workflow to make sure the file exists in the action workspace.
 
 ### Obtaining the `repository-id` and `category-id`
 You can find `repository-id` and `category-id` using [GitHub's GraphQL Explorer](https://docs.github.com/en/graphql/overview/explorer). Replace `<REPO_NAME>` and `<REPO_OWNER>` with the repo you want to update.
