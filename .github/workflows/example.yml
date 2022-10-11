@@ -16,7 +16,7 @@ jobs:
 
       - name: Generate new discussion
         id: create-discussion
-        uses: abirismyname/create-discussion@v1.x
+        uses: abirismyname/create-discussion@523ebc03ce73d4dd820adb97ae01dcf8688543ae
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}      
         with:

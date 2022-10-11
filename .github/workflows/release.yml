@@ -24,6 +24,8 @@ jobs:
             --field sha="$SHA" \
             --field ref="refs/heads/v1.x"
       - uses: actions/checkout@v2
+        with:
+          token: ${{ secrets.PAT }}
       - uses: actions/setup-node@v1
       - run: npm ci
       - run: npm run build
