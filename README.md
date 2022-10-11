@@ -36,6 +36,7 @@ The following inputs are _required_:
 
 - `title`: The title of the discussion
 - `body`: The body of the discussion
+- `body-filepath`: The path to a file containing the body of the new discussion (takes precedence over `body`).
 - `repository-id`: The ID of the repository for the new discussion
 - `category-id`: The ID of the category for the new discussion
 
