@@ -25,3 +25,14 @@ jobs:
             Let's Discuss!
           repository-id: 'R_kgDOG-yfvw'
           category-id: 'DIC_kwDOG-yfv84CRQpR' 
+
+      - name: Generate new discussion using file
+        id: create-discussion-with-file
+        uses: abirismyname/create-discussion@v1.1
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}      
+        with:
+          title: "New Discussion ${{ env.DATE }} in General"
+          body-filepath: 'zen.txt'
+          repository-id: 'R_kgDOG-yfvw'
+          category-id: 'DIC_kwDOG-yfv84CRQpR'           

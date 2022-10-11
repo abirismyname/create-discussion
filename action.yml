@@ -8,7 +8,11 @@ inputs:
   body:
     description: |
       The body of the new discussion.
-    required: true
+    required: false
+  body-filepath:
+    description: |
+      The path to a file containing the body of the new discussion (takes precedence over body).
+    required: false    
   repository-id:
     description: |
       The ID of a repository in which to create the discussion.
@@ -23,7 +27,7 @@ outputs:
   discussion-url:
     description: URL of the created discussion   
 runs:
-  using: node12
+  using: node16
   main: dist/index.js
 branding:
   icon: message-circle
