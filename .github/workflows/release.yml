@@ -33,7 +33,7 @@ jobs:
         with:    
           commit_message: Add dist/index.js
           file_pattern: dist/*.js
-          tagging_message: 'v1.0.1'
+          tagging_message: 'v1.1.0'
           push_options: '--force'
       - uses: actions/upload-artifact@v2
         with:
