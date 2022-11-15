@@ -36,7 +36,7 @@
     "typescript": "^4.1.2"
   },
   "dependencies": {
-    "@actions/core": "^1.9.1",
+    "@actions/core": "^1.10.0",
     "axios": "^0.21.2",
     "base64-stream": "^1.0.0",
     "multistream": "^4.0.1"
