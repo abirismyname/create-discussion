@@ -1,41 +1,30 @@
 name: release v1
 on:
-  push:
-    branches:
-      - main
-
   # Trigger release manually
   workflow_dispatch:
-
+    inputs:
+      version:
+        description: 'New version'
+        required: true
+        default: '1.2.0'
 jobs:
   release:
     name: release
     runs-on: ubuntu-latest
     steps:
-      - name: Ensure v1.x exists
-        continue-on-error: true
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          export SHA=$( gh api \
-            /repos/$GITHUB_REPOSITORY/git/refs/heads/main \
-            | jq --raw-output '.object.sha' )
-          gh api /repos/$GITHUB_REPOSITORY/git/refs \
-            --field sha="$SHA" \
-            --field ref="refs/heads/v1.x"
       - uses: actions/checkout@v2
         with:
           token: ${{ secrets.PAT }}
-      - uses: actions/setup-node@v1
+      - uses: actions/setup-node@v4.0.2
       - run: npm ci
       - run: npm run build
-      - uses: stefanzweifel/git-auto-commit-action@v4  
+      - uses: stefanzweifel/git-auto-commit-action@v5  
         with:    
           commit_message: Add dist/index.js
           file_pattern: dist/*.js
-          tagging_message: 'v1.1.0'
+          tagging_message: "v${{ github.event.inputs.version }}"
           push_options: '--force'
-      - uses: actions/upload-artifact@v2
+      - uses: actions/upload-artifact@v4.3.1
         with:
           name: build
           path: dist/index.js
