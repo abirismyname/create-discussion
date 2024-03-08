@@ -16,7 +16,7 @@ jobs:
       - uses: actions/checkout@v4
       - name: Generate new discussion
         id: create-discussion
-        uses: abirismyname/create-discussion@v1.1.0
+        uses: abirismyname/create-discussion@v1.2.0
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}      
         with:
@@ -28,7 +28,7 @@ jobs:
 
       - name: Generate new discussion using file
         id: create-discussion-with-file
-        uses: abirismyname/create-discussion@v1.1.0
+        uses: abirismyname/create-discussion@v1.2.0
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}      
         with:
