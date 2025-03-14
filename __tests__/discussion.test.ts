@@ -12,12 +12,10 @@ describe("Discussion", () => {
         "Discussion body text",
       );
       discussion.octokit.graphql = jest.fn().mockResolvedValue({
-        data: {
-          createDiscussion: {
-            discussion: {
-              id: "123",
-              url: "https://example.com/discussion/123",
-            },
+        createDiscussion: {
+          discussion: {
+            id: "123",
+            url: "https://example.com/discussion/123",
           },
         },
       }) as unknown as typeof discussion.octokit.graphql;
