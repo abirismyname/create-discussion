@@ -21,6 +21,10 @@ inputs:
     description: |
       The ID of a `DiscussionCategory` within this repository.
     required: true
+  github-token:
+    description: |
+      A GitHub token with the necessary permissions to create a discussion.
+    required: false
 outputs:
   discussion-id:
     description: ID of the created discussion
