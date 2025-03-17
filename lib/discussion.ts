@@ -31,7 +31,7 @@ export class Discussion {
   categoryId: string;
   title: string;
   body: string;
-  id: number;
+  id: string;
   url: string;
   octokit = getOctokit(getInput("github-token") || process.env.GH_TOKEN);
 
