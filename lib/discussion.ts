@@ -1,72 +1,76 @@
-import * as core from "@actions/core";
-import Resource from "./resource";
+import { getInput, info } from "@actions/core";
+import { getOctokit } from "@actions/github";
+import type { GraphQlQueryResponseData } from "@octokit/graphql";
 
-export class Discussion extends Resource {
-  url: string;
-  id: string;
-  constructor(
-    readonly repositoryId: string,
-    readonly categoryId: string,
-    readonly title: string,
-    readonly body: string
+const createDiscussionMutation = `
+  mutation CreateDiscussion(
+    $body: String!
+    $title: String!
+    $repositoryId: ID!
+    $categoryId: ID!
   ) {
-    super();
-  }
+    # input type: CreateDiscussionInput
+    createDiscussion(
+      input: {
+        repositoryId: $repositoryId
+        categoryId: $categoryId
+        body: $body
+        title: $title
+      }
+    ) {
+      # response type: CreateDiscussionPayload
+      discussion {
+        id
+        url
+      }
+    }
+  }`;
 
-  async load(): Promise<void> {
-    throw new Error("Not implemented");
-  }
+export class Discussion {
+  repositoryId: string;
+  categoryId: string;
+  title: string;
+  body: string;
+  id: string;
+  url: string;
+  octokit = getOctokit(getInput("github-token") || process.env.GH_TOKEN);
 
-  async update(): Promise<void> {
-    throw new Error("Not implemented");
+  constructor(
+    repositoryId: string,
+    categoryId: string,
+    title: string,
+    body: string,
+  ) {
+    this.repositoryId = repositoryId;
+    this.categoryId = categoryId;
+    this.title = title;
+    this.body = body;
   }
 
   async save(): Promise<void> {
-    type ResponseShape = {
-      data: {
-        createDiscussion: {
-          discussion: {
-            id: string;
-            url: string;
-          };
-        };
-      };
-    };
-
-    const response = await this.graphql(
-      `mutation CreateDiscussion(
-        $body: String!
-        $title: String!
-        $repositoryId: ID!
-        $categoryId: ID!
-      ) {
-        # input type: CreateDiscussionInput
-        createDiscussion(
-          input: {
-            repositoryId: $repositoryId
-            categoryId: $categoryId
-            body: $body
-            title: $title
-          }
-        ) {
-          # response type: CreateDiscussionPayload
-          discussion {
-            id
-            url
-          }
-        }
-      }
-      `,
+    const response: GraphQlQueryResponseData = await this.octokit.graphql(
+      createDiscussionMutation,
       {
-        body: this.body,
-        title: this.title,
         repositoryId: this.repositoryId,
         categoryId: this.categoryId,
-      }
+        title: this.title,
+        body: this.body,
+      },
     );
-    this.id = (response.data as ResponseShape).data.createDiscussion.discussion.id;
-    this.url = (response.data as ResponseShape).data.createDiscussion.discussion.url;
 
-    this.debug(`Discussion Created id: ${this.id}, url: ${this.url}`);
+    if (
+      !response ||
+      !response.createDiscussion ||
+      !response.createDiscussion.discussion
+    ) {
+      throw new Error(
+        `Failed to create discussion. Response: ${JSON.stringify(response)}`,
+      );
+    }
+
+    this.id = response.createDiscussion.discussion.id;
+    this.url = response.createDiscussion.discussion.url;
+
+    info(`Discussion Created id: ${this.id}, url: ${this.url}`);
   }
 }
