@@ -28,7 +28,7 @@ jobs:
 
       - name: Generate new discussion using file
         id: create-discussion-with-file
-        uses: abirismyname/create-discussion@v1.2.0
+        uses: abirismyname/create-discussion@v2.0.0
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}      
         with:
