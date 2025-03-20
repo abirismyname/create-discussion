@@ -1,6 +1,7 @@
 process.env.GH_TOKEN = "123";
 
 import { Discussion } from "../lib/discussion";
+import { octokit } from "../lib/octokit";
 
 describe("Discussion", () => {
   describe("create", () => {
@@ -11,14 +12,14 @@ describe("Discussion", () => {
         "Discussion Title",
         "Discussion body text",
       );
-      discussion.octokit.graphql = jest.fn().mockResolvedValue({
+      octokit.graphql = jest.fn().mockResolvedValue({
         createDiscussion: {
           discussion: {
             id: "123",
             url: "https://example.com/discussion/123",
           },
         },
-      }) as unknown as typeof discussion.octokit.graphql;
+      }) as unknown as typeof octokit.graphql;
       await discussion.save();
 
       expect(discussion.id).toEqual("123");

@@ -16,11 +16,22 @@ inputs:
   repository-id:
     description: |
       The ID of a repository in which to create the discussion.
-    required: true
+    required: false
   category-id:
     description: |
       The ID of a `DiscussionCategory` within this repository.
-    required: true
+    required: false
+  repository-name:
+    description: |
+      The name and owner of the repository in which to create the discussion (e.g., github/octocat).
+      If not provided, the action will use the repository that the Action is running in.
+    required: false
+    default: ${{ github.repository }}
+  category-name:
+    description: |
+      The name of the discussion category in which to create the discussion (defaults to 'General').
+    required: false
+    default: 'General'
   github-token:
     description: |
       A GitHub token with the necessary permissions to create a discussion.
