@@ -110,4 +110,5 @@ This repo contains an example [workflow](https://github.com/abirismyname/create-
 ## Credits
 
 - :bow: Based on [swinton/commit](https://github.com/swinton/commit).
-- :bow: [@imjohnbo](imjohnbo) for the inspiration.
+- :bow: [@imjohnbo](github.com/imjohnbo) for the inspiration.
+- :bow: [@benbalter](github.com/benbalter) for modernizing and adding much needed new features
