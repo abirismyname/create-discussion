@@ -49,7 +49,7 @@ describe("Repository", () => {
     expect(repository.categories).toEqual(mockCategories);
     expect(octokit.graphql).toHaveBeenCalledWith(
       expect.stringContaining("query RepositoryCategories"),
-      { repositoryId: "" },
+      { name: mockName, owner: mockOwner },
     );
   });
 
@@ -79,7 +79,7 @@ describe("Repository", () => {
     expect(categoryId).toBe("cat-1");
     expect(octokit.graphql).toHaveBeenCalledWith(
       expect.stringContaining("query RepositoryCategories"),
-      { repositoryId: repository.id },
+      { name: mockName, owner: mockOwner },
     );
   });
 });
