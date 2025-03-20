@@ -1,5 +1,5 @@
-import { getInput, info } from "@actions/core";
-import { getOctokit } from "@actions/github";
+import { info } from "@actions/core";
+import { octokit } from "./octokit";
 import type { GraphQlQueryResponseData } from "@octokit/graphql";
 
 const createDiscussionMutation = `
@@ -33,7 +33,6 @@ export class Discussion {
   body: string;
   id: string;
   url: string;
-  octokit = getOctokit(getInput("github-token") || process.env.GH_TOKEN);
 
   constructor(
     repositoryId: string,
@@ -48,7 +47,7 @@ export class Discussion {
   }
 
   async save(): Promise<void> {
-    const response: GraphQlQueryResponseData = await this.octokit.graphql(
+    const response: GraphQlQueryResponseData = await octokit.graphql(
       createDiscussionMutation,
       {
         repositoryId: this.repositoryId,

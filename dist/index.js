@@ -31884,6 +31884,15 @@ var external_fs_ = __nccwpck_require__(9896);
 var external_fs_default = /*#__PURE__*/__nccwpck_require__.n(external_fs_);
 // EXTERNAL MODULE: ./node_modules/@actions/github/lib/github.js
 var github = __nccwpck_require__(3228);
+;// CONCATENATED MODULE: ./lib/octokit.ts
+
+
+const token = (0,core.getInput)("github-token") || process.env.GH_TOKEN;
+if (token == "") {
+    throw new Error("Either github-token (with) or GH_TOKEN (env) must be set");
+}
+const octokit = (0,github.getOctokit)(token);
+
 ;// CONCATENATED MODULE: ./lib/discussion.ts
 var __awaiter = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
@@ -31921,7 +31930,6 @@ const createDiscussionMutation = `
   }`;
 class Discussion {
     constructor(repositoryId, categoryId, title, body) {
-        this.octokit = (0,github.getOctokit)((0,core.getInput)("github-token") || process.env.GH_TOKEN);
         this.repositoryId = repositoryId;
         this.categoryId = categoryId;
         this.title = title;
@@ -31929,7 +31937,7 @@ class Discussion {
     }
     save() {
         return __awaiter(this, void 0, void 0, function* () {
-            const response = yield this.octokit.graphql(createDiscussionMutation, {
+            const response = yield octokit.graphql(createDiscussionMutation, {
                 repositoryId: this.repositoryId,
                 categoryId: this.categoryId,
                 title: this.title,
@@ -31943,6 +31951,81 @@ class Discussion {
             this.id = response.createDiscussion.discussion.id;
             this.url = response.createDiscussion.discussion.url;
             (0,core.info)(`Discussion Created id: ${this.id}, url: ${this.url}`);
+        });
+    }
+}
+
+;// CONCATENATED MODULE: ./lib/repository.ts
+var repository_awaiter = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+
+
+class Repository {
+    constructor(nwo) {
+        const [owner, name] = nwo.split("/");
+        if (!owner || !name) {
+            throw new Error(`Invalid repository name: ${nwo}`);
+        }
+        this.owner = owner;
+        this.name = name;
+        this.id = "";
+        this.categories = [];
+    }
+    getId() {
+        return repository_awaiter(this, void 0, void 0, function* () {
+            (0,core.info)(`Fetching repository ID for ${this.owner}/${this.name}`);
+            const response = yield octokit.graphql(`query RepositoryId($owner: String!, $name: String!) {
+        repository(owner: $owner, name: $name) {
+          id
+        }
+      }`, {
+                owner: this.owner,
+                name: this.name,
+            });
+            this.id = response.repository.id;
+            (0,core.info)(`Repository ID retrieved: ${this.id}`);
+            return this.id;
+        });
+    }
+    getCategories() {
+        return repository_awaiter(this, void 0, void 0, function* () {
+            (0,core.info)(`Fetching discussion categories for repository: ${this.owner}/${this.name}`);
+            const response = yield octokit.graphql(`query RepositoryCategories($name: String!, $owner: String!) {
+        repository(owner: $owner, name: $name) {
+          discussionCategories(first: 100) {
+            nodes {
+              id
+              name
+            }
+          }
+        }
+      }`, {
+                owner: this.owner,
+                name: this.name,
+            });
+            this.categories = response.repository.discussionCategories.nodes;
+            return this.categories;
+        });
+    }
+    getCategoryId(categoryName) {
+        return repository_awaiter(this, void 0, void 0, function* () {
+            if (this.categories.length === 0) {
+                yield this.getCategories();
+            }
+            const category = this.categories.find((cat) => cat.name === categoryName);
+            if (!category) {
+                (0,core.info)(`Available categories: ${this.categories.map((cat) => cat.name).join(", ")}`);
+                throw new Error(`Category "${categoryName}" not found`);
+            }
+            (0,core.info)(`Category "${categoryName}" found with ID: ${category.id}`);
+            return category.id;
         });
     }
 }
@@ -31961,10 +32044,40 @@ var index_awaiter = (undefined && undefined.__awaiter) || function (thisArg, _ar
 
 
 
+
+function getRepo() {
+    const repository = (0,core.getInput)("repository-name", { required: true });
+    return new Repository(repository);
+}
+function getRepositoryId() {
+    return index_awaiter(this, void 0, void 0, function* () {
+        const repositoryId = (0,core.getInput)("repository-id", { required: false });
+        if (repositoryId !== "") {
+            return repositoryId;
+        }
+        const repo = getRepo();
+        return yield repo.getId();
+    });
+}
+function getCategoryId() {
+    return index_awaiter(this, void 0, void 0, function* () {
+        const categoryId = (0,core.getInput)("category-id", { required: false });
+        if (categoryId !== "") {
+            return categoryId;
+        }
+        const categoryName = (0,core.getInput)("category-name", { required: false });
+        if (categoryName === "") {
+            throw new Error("Either category-id or category-name must be set");
+        }
+        const repo = getRepo();
+        const categories = yield repo.getCategories();
+        return repo.getCategoryId(categoryName);
+    });
+}
 function run() {
     return index_awaiter(this, void 0, void 0, function* () {
-        const repositoryId = (0,core.getInput)("repository-id", { required: true });
-        const categoryId = (0,core.getInput)("category-id", { required: true });
+        const repositoryId = yield getRepositoryId();
+        const categoryId = yield getCategoryId();
         const title = (0,core.getInput)("title", { required: true });
         let body = (0,core.getInput)("body");
         const body_filepath = (0,core.getInput)("body-filepath");
